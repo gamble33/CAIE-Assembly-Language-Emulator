@@ -9,7 +9,7 @@ const RegisterConnectionLines = () => {
   useEffect(() => {
     setTimeout(() => {
       setInitialState(true);
-    }, 1)
+    }, 1);
   }, [])
 
   const renderArrows = () => {
@@ -24,6 +24,7 @@ const RegisterConnectionLines = () => {
                   strokeWidth={2}
                   showTail={connection.doubleSided}
                   animateDrawing={true}
+                  key={connection.reg1+"-"+connection.reg2}
               />
           )}
         </Xwrapper>

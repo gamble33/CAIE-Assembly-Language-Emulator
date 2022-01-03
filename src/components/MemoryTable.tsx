@@ -1,19 +1,19 @@
 import React, {FC} from "react";
 import MemoryCell from "./MemoryCell";
-import {initialMemoryAddress} from "../constants/MemoryAddresses";
 
 interface Props {
   memoryArr: number[];
+  initialMemoryAddr: number;
 }
 
-const MemoryTable: FC<Props> = ({memoryArr}) => {
+const MemoryTable: FC<Props> = ({memoryArr, initialMemoryAddr}) => {
   return (
       <div className="memory-table">
         {memoryArr.map(
             (value, index) =>
                 <MemoryCell
-                    key={initialMemoryAddress + index}
-                    address={initialMemoryAddress + index}
+                    key={initialMemoryAddr + index}
+                    address={initialMemoryAddr + index}
                     value={value}
                 />
         )}

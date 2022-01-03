@@ -26,7 +26,7 @@ const Registers: RegisterObject[] = [
   },
   {
     name: "PC",
-    value: 1,
+    value: 0,
     fullName: "Program Counter",
     description: "Stores the memory location (address) of where the next instruction (to be executed) can be found and read.",
   },

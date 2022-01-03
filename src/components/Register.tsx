@@ -2,6 +2,7 @@ import React, {FC, useEffect} from 'react';
 import ValueCell from "./ValueCell";
 import ReactTooltip from "react-tooltip";
 import RegisterObject from "../Types/RegisterType";
+import '../Registers.css';
 
 interface Props {
   registerObj: RegisterObject;
@@ -9,7 +10,7 @@ interface Props {
 
 const Register: FC<Props> = (props) => {
   return (
-      <div>
+      <div style={{width:"100%"}}>
         <div data-tip data-for={props.registerObj.name + "-register-description"} className="register-box grow">
           <div className="register">
             {props.registerObj.name}
