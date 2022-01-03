@@ -4,6 +4,7 @@ export interface InstructionObj {
   rtns: string[]; // Register Transfer Notation
   usage: string,
   description: string,
+  opcodeNumber: number,
 }
 
 export enum operandType {
