@@ -1,0 +1,53 @@
+.MAR {
+  position: absolute;
+  bottom: 0%;
+  left: 5%;
+}
+
+.MDR {
+  position: absolute;
+  top: 80%;
+  right: 10%;
+}
+
+.PC {
+  position: absolute;;
+  top: 70%;
+  left: 5%;
+}
+
+.CU {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+}
+
+.CIR {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+}
+
+.ALU {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+}
+
+.ACC {
+  position: absolute;
+  top: 5%;
+  left: 40%;
+}
+
+.SR {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+}
+
+.IX {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+}

@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import AssemblyEmulator from './AssemblyEmulator';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AssemblyEmulator />
   </React.StrictMode>,
   document.getElementById('root')
 );

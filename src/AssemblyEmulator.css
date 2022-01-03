@@ -1,0 +1,169 @@
+:root {
+  --main: #1C1D21;
+  --main-secondary: #2F3137;
+  --main-compliment: #F1E3E4;
+  --main-compliment-secondary: #D0DB97;
+}
+
+.App {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.button {
+  background-color: var(--main-compliment);
+  color: var(--main);
+  border-color: transparent;
+
+}
+
+.button:hover {
+  opacity: 70%;
+  background-color: var(--main);
+  color: var(--main-compliment)
+}
+
+.grow {
+  transition: all .2s ease-in-out;
+  overflow-x: hidden;
+}
+
+.grow:hover {
+  transform: scale(1.1);
+  overflow-x: hidden;
+}
+
+.container {
+  user-select: none;
+}
+
+.left-container {
+  padding: 1%;
+  background-color: var(--main);
+  flex-basis: max-content;
+  flex-grow: 0.3;
+}
+
+.right-container {
+  padding: 1%;
+  background-color: var(--main-secondary);
+  display: flex;
+  flex-direction: column;
+  flex-basis: min-content;
+  flex-grow: 1;
+}
+
+.code-container {
+  margin-top: 1%;
+  font-family: monospace;
+}
+
+.ide {
+  color: var(--main-compliment);
+}
+
+.line {
+  position: relative;
+}
+
+.line::before {
+  content: attr(data-line-number);
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.5;
+}
+
+.line-text {
+  margin-left: 2em;
+}
+
+.options {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.option-item{
+  margin-left: 10px;
+}
+
+.registers-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: relative;
+  height: 40%;
+  text-align: center;
+  justify-content: center;
+}
+
+.memory-table {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+.memory-cell {
+  border: 1px solid var(--main-compliment);
+  margin: 1px;
+  text-align: center;
+  max-width: 10%;
+  min-width: 10%;
+}
+
+.memory-address {
+  color: var(--main-compliment);
+  font-size: xx-small;
+  text-align: center;
+}
+
+
+.cell {
+  color: var(--main-compliment);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.register {
+  color: var(--main-compliment);
+  border-right: thin solid var(--main-compliment);
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.register-box {
+  display: flex;
+  flex-direction: row;
+  border: thin solid var(--main-compliment);
+  min-width: 130%;
+  max-width: 130%;
+}
+
+.unit {
+  background-color: var(--main-compliment-secondary);
+  padding-right: 5px;
+  padding-left: 5px;
+  color: var(--main-secondary);
+}
+
+.divider {
+  width: 100%;
+  border-radius: 3px;
+  border-top: 3px solid var(--main-compliment);
+}
+
+.hardware-heading {
+  color: var(--main-compliment);
+  font-size: small;
+  text-align: center;
+  padding-top: 1%;
+}
+
+.tooltip{
+  max-width: 20%;
+}
