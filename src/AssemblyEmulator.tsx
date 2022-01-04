@@ -9,7 +9,8 @@ import {getFakeValueFromMemory, getFakeRegisterValue} from './assemblyExecution'
 import {initialInstructionMemoryAddress, initialMemoryAddress, totalMemoryCells} from './constants/MemoryAddresses';
 import RegisterContainer from "./components/RegisterContainer";
 import MemoryTable from "./components/MemoryTable";
-import {translate, splitWhitespace} from "./translation";
+import translate from "./translation";
+import {splitWhitespace} from "./utils";
 
 
 function AssemblyEmulator() {
@@ -146,7 +147,6 @@ function AssemblyEmulator() {
             if (!isNaN(+givingRegister)) innerValue = Number(givingRegister);
             else innerValue = getFakeRegisterValue(givingRegister, fakeRegisters);
 
-            // TODO: figure out how to solve eval expressions
             innerValue = Number(eval(innerValue + exprSuffix));
 
             bracketCount--;
@@ -160,7 +160,6 @@ function AssemblyEmulator() {
             valueForRegister = innerValue;
         }
         fakeRegisters = getUpdatedRegisterFakeState(receivingRegister, valueForRegister, fakeRegisters);
-        console.log('rgstrs', fakeRegisters);
         return [fakeRegisters, fakeMemory];
     }
 

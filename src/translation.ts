@@ -1,5 +1,6 @@
 import Instructions from "./constants/Instructions";
 import {InstructionObj} from "./Types/InstructionType";
+import {splitWhitespace} from "./utils";
 
 const COMMENT_CHAR = '#';
 const fetchExecuteCycle: Array<Array<string>> = [
@@ -45,11 +46,9 @@ const expandInstructionsToRTN = (codeArray: string[]): Array<string> => {
     return rtnArr;
 }
 
-export const splitWhitespace = (code: string): Array<string> => {
-    return code.split(/\s+/);
-};
 
-export const translate = (code: string): [string[], number[]] => {
+
+const translate = (code: string): [string[], number[]] => {
     const filteredComments = filterComments(code);
     const codeArr = splitWhitespace(filteredComments);
     const registerTransferCommands = expandInstructionsToRTN(codeArr);
@@ -61,3 +60,5 @@ export const translate = (code: string): [string[], number[]] => {
     }
     return [registerTransferCommands, instructionCodeArray];
 };
+
+export default translate;
