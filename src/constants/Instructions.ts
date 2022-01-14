@@ -26,6 +26,17 @@ const Instructions: InstructionObj[] = [
         usage: "LDI <address>",
         description: "Indirect adressing to load contents into accumulator",
         opcodeNumber: 18,
+    },
+    {
+        opcode: "STO",
+        operand: operandType.ADDRESS,
+        rtns: [
+            "MDR <- ACC",
+            "[OPERAND] <- MDR"
+        ],
+        usage: "STO <address>",
+        description: "Stores contents of ACC into memory location specified",
+        opcodeNumber: 19
     }
 ];
 

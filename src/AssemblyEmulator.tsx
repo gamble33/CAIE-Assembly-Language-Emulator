@@ -116,7 +116,7 @@ function AssemblyEmulator() {
         console.log("current RTN:", curRtn);
 
         const rtnParts = splitWhitespace(curRtn);
-        const receivingRegister: string = rtnParts[0];
+        const receivingCell: string = rtnParts[0];
         let valueForRegister: number = -1;
         if (Units.find(value => value.name === rtnParts[0])) {
             // just animation needed (transfer is between unit & register/unit thus no data is being transferred)
@@ -128,7 +128,13 @@ function AssemblyEmulator() {
             return [fakeRegisters, fakeMemory];
         } else {
             const secondPart: string = rtnParts[2];
-            let givingRegister: string = "";
+
+            /*
+             Register or memory location that holds the value being transferred
+             to the receiving cell (register/memory location)
+             */
+            let givingCell: string = "";
+
             let bracketCount = 0;
             let exprSuffix: string = "";
             let readRegisterFlag: boolean = false;
@@ -138,14 +144,14 @@ function AssemblyEmulator() {
                     if (currentCharacter === ']') continue;
                     exprSuffix += currentCharacter;
                 } else if (currentCharacter === '[') bracketCount++;
-                else if (currentCharacter !== ']') givingRegister += currentCharacter;
+                else if (currentCharacter !== ']') givingCell += currentCharacter;
                 else {
                     readRegisterFlag = true;
                 }
             }
             let innerValue: number;
-            if (!isNaN(+givingRegister)) innerValue = Number(givingRegister);
-            else innerValue = getFakeRegisterValue(givingRegister, fakeRegisters);
+            if (!isNaN(+givingCell)) innerValue = Number(givingCell);
+            else innerValue = getFakeRegisterValue(givingCell, fakeRegisters);
 
             innerValue = Number(eval(innerValue + exprSuffix));
 
@@ -159,7 +165,7 @@ function AssemblyEmulator() {
             console.log(instrMemoryArr);
             valueForRegister = innerValue;
         }
-        fakeRegisters = getUpdatedRegisterFakeState(receivingRegister, valueForRegister, fakeRegisters);
+        fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
         return [fakeRegisters, fakeMemory];
     }
 

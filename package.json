@@ -6,11 +6,11 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.0.3",
     "@types/node": "^16.11.17",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "draft-js": "^0.11.7",
+    "jest": "^27.4.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
@@ -21,8 +21,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "test": "jest --watchAll --verbose",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -44,6 +44,8 @@
     ]
   },
   "devDependencies": {
-    "@types/draft-js": "^0.11.8"
+    "@types/draft-js": "^0.11.8",
+    "@types/jest": "^27.4.0",
+    "ts-jest": "^27.1.2"
   }
 }
