@@ -4,7 +4,6 @@ import 'draft-js/dist/Draft.css';
 import Line from "./Line";
 import "./styles.css";
 import ReactTooltip from "react-tooltip";
-import set = Reflect.set;
 
 interface Props {
     onTranslate(code: string, twoPass: boolean): void;
@@ -29,6 +28,7 @@ const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, 
     const [allowStep, setAllowStep] = useState<boolean>(false);
     const [twoPassAssembler, setTwoPassAssembler] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [playSpeed, setPlaySpeed] = useState<number>(1);
 
     const mapKeyToEditorCommand = (e: any): string | null => {
         if (e.keyCode === 9 /* TAB */) {
@@ -55,17 +55,31 @@ const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, 
         component: Line,
     });
 
+    const callOnPlay = (playing: boolean) => {
+        onPlayToggle(() => {
+            setIsPlaying(false);
+        }, playSpeed, playing);
+    }
+
     const renderExecuteButton = () => {
         if (allowStep) {
             return (
                 <>
-                    {!isPlaying && <button className={"button grow"} onClick={() => onStep()}>Step</button>}
-                    <button className={"button grow"} onClick={() => {
-                        onPlayToggle(() => {
-                            setIsPlaying(false);
-                        }, 1, !isPlaying);
-                        setIsPlaying(prevState => !prevState);
-                    }}>{isPlaying ? "Pause" : "Play"}</button>
+                    <div className="option-item">
+                        {!isPlaying && <button className={"button grow"} onClick={() => onStep()}>Step</button>}
+                        <button className={"button grow"} onClick={() => {
+                            callOnPlay(!isPlaying);
+                            setIsPlaying(prevState => !prevState);
+                        }}>{isPlaying ? "Pause" : "Play"}
+                        </button>
+                    </div>
+
+                    <div className="option-item grow"><label>Speed
+                        <input min={1} max={10} type="range" className="range" value={playSpeed} onChange={event => {
+                            setPlaySpeed(parseInt(event.target.value));
+                            callOnPlay(false);
+                        }}/>
+                    </label></div>
                 </>
             )
         } else {
@@ -131,9 +145,7 @@ const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, 
                                                       checked={allowStep}
                                                       onChange={e => setAllowStep(e.target.checked)}/></label>
                         </div>
-                        <div className="option-item">
-                            {renderExecuteButton()}
-                        </div>
+                        {renderExecuteButton()}
                     </>
                     : ""
                 }

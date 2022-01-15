@@ -64,6 +64,7 @@
 }
 
 .ide {
+  min-width: 100%;
   color: var(--main-compliment);
 }
 
