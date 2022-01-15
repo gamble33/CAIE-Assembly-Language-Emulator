@@ -108,6 +108,7 @@ function AssemblyEmulator() {
         setAssemblyRtns(rtns);
         setIsAssembled(true);
         setCurrentRtnIndex(0);
+        resetUnitsAndExecutor();
     }
 
     const handleStepClick = () => {
@@ -119,6 +120,12 @@ function AssemblyEmulator() {
         );
         setRegisters(newRegisterArr);
         setMemoryArr(newMemoryArr);
+    }
+
+    const resetUnitsAndExecutor = () => {
+        resetRegisters();
+        resetMemory();
+        resetRtns();
     }
 
     const step = (rtns: Array<string>, rtnIndex: number, fakeRegisters: RegisterObject[], fakeMemory: number[]): [RegisterObject[], number[]] => {
@@ -198,9 +205,7 @@ function AssemblyEmulator() {
             <div className="right-container container">
                 <div className="options">
                     <button data-tip data-for="reset-registers-memory" className="button grow" onClick={() => {
-                        resetRegisters();
-                        resetMemory();
-                        resetRtns();
+                        resetUnitsAndExecutor();
                     }}>Reset
                     </button>
                     <ReactTooltip id="reset-registers-memory">
