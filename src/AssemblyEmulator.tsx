@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './AssemblyEmulator.css';
 import IDE from "./components/IDE/IDE";
 import RegisterObject from "./Types/RegisterType";
@@ -12,6 +12,7 @@ import MemoryTable from "./components/MemoryTable";
 import translate from "./translation";
 import {splitWhitespace} from "./utils";
 import RegisterConnectionLines from "./components/RegisterConnectionLines/RegisterConnectionLines";
+import AssemblerConsole from "./components/AssemblerConsole/AssemblerConsole";
 
 function AssemblyEmulator() {
 
@@ -21,6 +22,7 @@ function AssemblyEmulator() {
     const [isAssembled, setIsAssembled] = useState<boolean>(false);
     const [assemblyRtns, setAssemblyRtns] = useState<Array<string>>([]);
     const [currentRtnIndex, setCurrentRtnIndex] = useState<number>(0);
+    const [assemblerResult, setAssemblerResult] = useState<[string, string]>(["", "NOTASSEMBLED"]);
 
     const [showArrows, setShowArrows] = useState<boolean>(true);
 
@@ -92,8 +94,13 @@ function AssemblyEmulator() {
 
     }, [])
 
-    const onAssemble = (code: string) => {
-        const [rtns, instrCodeArr] = translate(code);
+    const onAssemble = (code: string, twoPass: boolean) => {
+        const [rtns, instrCodeArr, translateError] = translate(code);
+        if (translateError) {
+            setAssemblerResult([translateError, "ERROR"]);
+            return;
+        }
+        setAssemblerResult([translateError, "SUCCESS"]);
         setInstrMemoryArr(instrCodeArr);
         setAssemblyRtns(rtns);
         setIsAssembled(true);
@@ -178,6 +185,7 @@ function AssemblyEmulator() {
                     onStep={handleStepClick}
                     isCodeAssembled={isAssembled}
                 />
+                <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]}/>
             </div>
             <div className="right-container container">
                 <div className="options">
@@ -190,8 +198,9 @@ function AssemblyEmulator() {
                         <span>Resets all memory locations and registers.</span>
                     </ReactTooltip>
                     <div className="option-item grow">
-                        <label>Show arrows: <input type="checkbox" id="show-arrows" name="show-arrows" checked={showArrows}
-                                                  onChange={e => setShowArrows(e.target.checked)}/></label>
+                        <label>Show arrows: <input type="checkbox" id="show-arrows" name="show-arrows"
+                                                   checked={showArrows}
+                                                   onChange={e => setShowArrows(e.target.checked)}/></label>
                     </div>
                 </div>
                 <h2 className="hardware-heading">Registers & Units</h2>

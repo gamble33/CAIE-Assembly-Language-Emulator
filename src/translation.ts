@@ -47,7 +47,8 @@ const expandInstructionsToRTN = (codeArray: string[]): Array<string> => {
 
 
 
-const translate = (code: string): [string[], number[]] => {
+const translate = (code: string): [string[], number[], string] => {
+    let translateError: string = "";
     const filteredComments = filterComments(code);
     const codeArr = splitWhitespace(filteredComments);
     const registerTransferCommands = expandInstructionsToRTN(codeArr);
@@ -57,7 +58,7 @@ const translate = (code: string): [string[], number[]] => {
             curInstr => curInstr.opcode === codeArr[i]
         )!.opcodeNumber);
     }
-    return [registerTransferCommands, instructionCodeArray];
+    return [registerTransferCommands, instructionCodeArray, ""];
 };
 
 export default translate;

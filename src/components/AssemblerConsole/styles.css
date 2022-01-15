@@ -1,0 +1,7 @@
+.success {
+    color: lawngreen;
+}
+
+.default {
+    color: var(--main-compliment);
+}

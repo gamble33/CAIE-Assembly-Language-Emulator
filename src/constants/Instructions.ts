@@ -32,7 +32,7 @@ const Instructions: InstructionObj[] = [
         operand: operandType.ADDRESS,
         rtns: [
             "MDR <- ACC",
-            "[OPERAND] <- MDR"
+            "MEMORY <- MDR"
         ],
         usage: "STO <address>",
         description: "Stores contents of ACC into memory location specified",
