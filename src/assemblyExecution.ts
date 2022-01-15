@@ -27,7 +27,7 @@ export const getUpdatedMemoryLocationFakeState = (memoryAddress: number, newVal:
  * @param cell A register or memory location that may be enclosed by square brackets and may include an expression (e.g., [ACC] + 1)
  * @returns An array containing the name of the cell, the expression and the number of bracket pairs
  */
-export const destructureRtnCell = (cell: string): [String, String, Number] =>  {
+export const destructureRtnCell = (cell: string): [string, string, number] =>  {
   let cellName: string = "";
   let exprSuffix: string = ""
   let readContents: boolean = false;
@@ -48,4 +48,12 @@ export const destructureRtnCell = (cell: string): [String, String, Number] =>  {
     }
   }
   return [cellName, exprSuffix, bracketCount];
+}
+
+export const evaluateExpressionValue = (cell: string, expr: string, registers: RegisterObject[]) => {
+  let innerValue: number;
+  if (!isNaN(+cell)) innerValue = Number(cell);
+  else innerValue = getFakeRegisterValue(cell, registers);
+
+  return Number(eval(innerValue + expr));
 }

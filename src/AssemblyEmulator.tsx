@@ -5,12 +5,13 @@ import RegisterObject from "./Types/RegisterType";
 import Registers from "./constants/Registers";
 import Units from "./constants/Units";
 import ReactTooltip from "react-tooltip";
-import {getFakeValueFromMemory, getFakeRegisterValue} from './assemblyExecution';
+import {getFakeValueFromMemory, destructureRtnCell, evaluateExpressionValue} from './assemblyExecution';
 import {initialInstructionMemoryAddress, initialMemoryAddress, totalMemoryCells} from './constants/MemoryAddresses';
 import RegisterContainer from "./components/RegisterContainer";
 import MemoryTable from "./components/MemoryTable";
 import translate from "./translation";
 import {splitWhitespace} from "./utils";
+import RegisterConnectionLines from "./components/RegisterConnectionLines/RegisterConnectionLines";
 
 
 function AssemblyEmulator() {
@@ -19,8 +20,8 @@ function AssemblyEmulator() {
     const [instrMemoryArr, setInstrMemoryArr] = useState<number[]>([]);
     const [registers, setRegisters] = useState<RegisterObject[]>([]);
     const [isAssembled, setIsAssembled] = useState<boolean>(false);
-    const assemblyRtns = useRef<Array<string>>([]);
-    const currentRtnIndex = useRef<number>(0);
+    const [assemblyRtns, setAssemblyRtns] = useState<Array<string>>([]);
+    const [currentRtnIndex, setCurrentRtnIndex] = useState<number>(0);
 
     const resetRegisters = () => {
         setRegisters(Registers);
@@ -93,77 +94,57 @@ function AssemblyEmulator() {
     const onAssemble = (code: string) => {
         const [rtns, instrCodeArr] = translate(code);
         setInstrMemoryArr(instrCodeArr);
-        assemblyRtns.current = rtns;
+        setAssemblyRtns(rtns);
         setIsAssembled(true);
-        currentRtnIndex.current = 0;
+        setCurrentRtnIndex(0);
     }
 
     const handleStepClick = () => {
         const [newRegisterArr, newMemoryArr] = step(
-            assemblyRtns.current,
-            currentRtnIndex.current,
+            assemblyRtns,
+            currentRtnIndex,
             registers,
             memoryArr
         );
         setRegisters(newRegisterArr);
         setMemoryArr(newMemoryArr);
-        currentRtnIndex.current++;
+        setCurrentRtnIndex(prevState => prevState + 1);
     }
 
     const step = (rtns: Array<string>, rtnIndex: number, fakeRegisters: RegisterObject[], fakeMemory: number[]): [RegisterObject[], number[]] => {
         const curRtn = rtns[rtnIndex];
-
-        console.log("current RTN:", curRtn);
 
         const rtnParts = splitWhitespace(curRtn);
         const receivingCell: string = rtnParts[0];
         let valueForRegister: number = -1;
         if (Units.find(value => value.name === rtnParts[0])) {
             // just animation needed (transfer is between unit & register/unit thus no data is being transferred)
-            console.error('animation needed');
+            // TODO: animation
             return [fakeRegisters, fakeMemory];
         }
         if (Units.find(value => value.name === rtnParts[2])) { // E.g., MAR <- CU
-            console.error('animation needed');
+            // TODO: Animation
             return [fakeRegisters, fakeMemory];
         } else {
-            const secondPart: string = rtnParts[2];
 
             /*
              Register or memory location that holds the value being transferred
              to the receiving cell (register/memory location)
              */
-            let givingCell: string = "";
+            const [givingCell, exprSuffix, bracketPairs] = destructureRtnCell(rtnParts[2]);
 
-            let bracketCount = 0;
-            let exprSuffix: string = "";
-            let readRegisterFlag: boolean = false;
-            for (let i = 0; i < secondPart.length; i++) {
-                const currentCharacter = secondPart.substring(i, i + 1)
-                if (readRegisterFlag) {
-                    if (currentCharacter === ']') continue;
-                    exprSuffix += currentCharacter;
-                } else if (currentCharacter === '[') bracketCount++;
-                else if (currentCharacter !== ']') givingCell += currentCharacter;
-                else {
-                    readRegisterFlag = true;
-                }
-            }
-            let innerValue: number;
-            if (!isNaN(+givingCell)) innerValue = Number(givingCell);
-            else innerValue = getFakeRegisterValue(givingCell, fakeRegisters);
+            let innerValue = evaluateExpressionValue(givingCell, exprSuffix, fakeRegisters);
 
-            innerValue = Number(eval(innerValue + exprSuffix));
-
-            bracketCount--;
+            let bracketCounter = bracketPairs - 1;
             const retrieveValueFromMemoryFunc: any =
                 innerValue < initialMemoryAddress || innerValue > initialMemoryAddress + totalMemoryCells
                     ? getValueFromInstructionMemory : getFakeValueFromMemory;
-            for (let i = 0; i < bracketCount; i++) {
+            for (let i = 0; i < bracketCounter; i++) {
                 innerValue = retrieveValueFromMemoryFunc(innerValue, fakeMemory);
             }
             console.log(instrMemoryArr);
             valueForRegister = innerValue;
+
         }
         fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
         return [fakeRegisters, fakeMemory];
@@ -172,14 +153,20 @@ function AssemblyEmulator() {
     const fastExecute = () => {
         let fakeRegisters: RegisterObject[] = registers;
         let fakeMemory: number[] = memoryArr;
-        for (let iterator = 0; iterator < assemblyRtns.current.length; iterator++) {
-            const [tmpFakeRegisters, tmpFakeMemory] = step(assemblyRtns.current, iterator, fakeRegisters, fakeMemory);
+        for (let iterator = 0; iterator < assemblyRtns.length; iterator++) {
+            const [tmpFakeRegisters, tmpFakeMemory] = step(assemblyRtns, iterator, fakeRegisters, fakeMemory);
             fakeRegisters = tmpFakeRegisters;
             fakeMemory = tmpFakeMemory;
         }
 
         setMemoryArr(fakeMemory);
         setRegisters(fakeRegisters);
+    }
+
+    const getLastRtn = (): string => {
+        const index = currentRtnIndex - 1;
+        if (index < 0) return "";
+        return assemblyRtns[index];
     }
 
     return (
@@ -216,6 +203,7 @@ function AssemblyEmulator() {
 
                 <MemoryTable memoryArr={memoryArr} initialMemoryAddr={initialMemoryAddress}/>
             </div>
+            <RegisterConnectionLines currentRtn={getLastRtn()}/>
         </div>
     );
 }

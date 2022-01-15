@@ -1,0 +1,11 @@
+.lineAnimation {
+    animation: line-animation-keyframes .2s ease-out;
+}
+@keyframes line-animation-keyframes {
+    from {
+        opacity: 0.2;
+    }
+    to {
+        opacity: 1;
+    }
+}

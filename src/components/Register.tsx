@@ -10,7 +10,10 @@ interface Props {
 
 const Register: FC<Props> = (props) => {
   return (
-      <div style={{width:"100%"}}>
+      <div style={{
+          minWidth:"4vw",
+          maxWidth:"4vw",
+      }}>
         <div data-tip data-for={props.registerObj.name + "-register-description"} className="register-box grow">
           <div className="register">
             {props.registerObj.name}

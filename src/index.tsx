@@ -4,11 +4,13 @@ import './index.css';
 import AssemblyEmulator from './AssemblyEmulator';
 import reportWebVitals from './reportWebVitals';
 
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <AssemblyEmulator />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <AssemblyEmulator/>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -11,8 +11,8 @@ export const RegisterConnections: RegisterConnection[] = [
     doubleSided: false,
   },
   {
-    reg1: "CU",
-    reg2: "CIR",
+    reg1: "CIR",
+    reg2: "CU",
     doubleSided: false,
   },
   {
@@ -45,4 +45,9 @@ export const RegisterConnections: RegisterConnection[] = [
     reg2: "SR",
     doubleSided: true,
   },
+  {
+    reg1: "CU",
+    reg2: "MAR",
+    doubleSided: false,
+  }
 ];
