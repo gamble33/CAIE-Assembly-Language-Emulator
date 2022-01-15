@@ -211,7 +211,7 @@ function AssemblyEmulator() {
             }
         })
 
-        if(receivingCellIsRegister){
+        if (receivingCellIsRegister) {
             fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
         } else {
             fakeMemory = getUpdatedMemoryLocationFakeState(parseInt(receivingCell), valueForRegister, fakeMemory);
@@ -251,7 +251,13 @@ function AssemblyEmulator() {
                     allowCodeExecution={currentRtnIndex < assemblyRtns.length}
                     onPlayToggle={handlePlay}
                 />
-                <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]} currentRtn={getLastRtn()} clearConsole={clearConsole}/>
+
+                <AssemblerConsole
+                    outputMessage={assemblerResult[0]}
+                    outputType={assemblerResult[1]}
+                    currentRtn={getLastRtn()}
+                    clearConsole={clearConsole}
+                />
             </div>
             <div className="right-container container">
                 <div className="options">
