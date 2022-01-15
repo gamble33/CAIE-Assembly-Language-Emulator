@@ -26,6 +26,27 @@ const filterComments = (code: string): string => {
     return filteredCommentsString.substring(1, filteredCommentsString.length);
 };
 
+const convertInstructionKeywords = (rtn: string, operand: string) => {
+    const rtnArr = splitWhitespace(rtn);
+    let rtnString: string;
+    switch (rtnArr[2]) {
+        case 'OPERAND':
+            rtnString = rtn.substring(0, rtnArr[0]!.length + rtnArr[1]!.length + 2) + operand;
+            break;
+        default:
+            rtnString = rtn;
+            break;
+    }
+    switch (rtnArr[0]) {
+        case 'MEMORY':
+            rtnString = operand + rtnString.substring(rtnArr[0].length, rtnString.length);
+            break;
+        default:
+            break;
+    }
+    return rtnString;
+}
+
 const expandInstructionsToRTN = (codeArray: string[]): Array<string> => {
     let rtnArr: Array<string> = [];
     for (let i = 0; i < codeArray.length; i += 2) {
@@ -34,17 +55,13 @@ const expandInstructionsToRTN = (codeArray: string[]): Array<string> => {
         const instruction: InstructionObj = Instructions.find(curInstruction => curInstruction.opcode === opcode)!;
         rtnArr.push(...fetchExecuteCycle[0]);
         rtnArr.push(...instruction.rtns.map(curRtn => {
-                const curRtnArr = splitWhitespace(curRtn);
-                return curRtnArr[2] === 'OPERAND' ?
-                    curRtn.substring(0, curRtnArr[0]!.length + curRtnArr[1]!.length + 2) + operand :
-                    curRtn;
+                return convertInstructionKeywords(curRtn, operand);
             }
         ));
         rtnArr.push(...fetchExecuteCycle[1]);
     }
     return rtnArr;
 }
-
 
 
 const translate = (code: string): [string[], number[], string] => {

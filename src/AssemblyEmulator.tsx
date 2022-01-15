@@ -5,7 +5,12 @@ import RegisterObject from "./Types/RegisterType";
 import Registers from "./constants/Registers";
 import Units from "./constants/Units";
 import ReactTooltip from "react-tooltip";
-import {getFakeValueFromMemory, destructureRtnCell, evaluateExpressionValue} from './assemblyExecution';
+import {
+    getFakeValueFromMemory,
+    destructureRtnCell,
+    evaluateExpressionValue,
+    getUpdatedMemoryLocationFakeState
+} from './assemblyExecution';
 import {initialInstructionMemoryAddress, initialMemoryAddress, totalMemoryCells} from './constants/MemoryAddresses';
 import RegisterContainer from "./components/Registers/RegisterContainer";
 import MemoryTable from "./components/MemoryTable";
@@ -183,19 +188,32 @@ function AssemblyEmulator() {
              */
             const [givingCell, exprSuffix, bracketPairs] = destructureRtnCell(rtnParts[2]);
 
-            let innerValue = evaluateExpressionValue(givingCell, exprSuffix, fakeRegisters);
+            let givingInnerValue = evaluateExpressionValue(givingCell, exprSuffix, fakeRegisters);
 
             let bracketCounter = bracketPairs - 1;
             const retrieveValueFromMemoryFunc: any =
-                innerValue < initialMemoryAddress || innerValue > initialMemoryAddress + totalMemoryCells
+                givingInnerValue < initialMemoryAddress || givingInnerValue > initialMemoryAddress + totalMemoryCells
                     ? getValueFromInstructionMemory : getFakeValueFromMemory;
             for (let i = 0; i < bracketCounter; i++) {
-                innerValue = retrieveValueFromMemoryFunc(innerValue, fakeMemory);
+                givingInnerValue = retrieveValueFromMemoryFunc(givingInnerValue, fakeMemory);
             }
-            valueForRegister = innerValue;
+            valueForRegister = givingInnerValue;
 
         }
-        fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
+        let receivingCellIsRegister: boolean = false;
+        Registers.forEach(register => {
+            if (register.name === receivingCell) {
+                receivingCellIsRegister = true;
+                return;
+            }
+        })
+
+        if(receivingCellIsRegister){
+            fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
+        } else {
+            fakeMemory = getUpdatedMemoryLocationFakeState(parseInt(receivingCell), valueForRegister, fakeMemory);
+        }
+
         setCurrentRtnIndex(prevState => prevState + 1);
         return [fakeRegisters, fakeMemory];
     }
