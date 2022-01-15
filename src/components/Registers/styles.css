@@ -1,0 +1,9 @@
+.animated {
+    animation: animated-keyframes .2s ease-in-out;
+}
+
+@keyframes animated-keyframes {
+    from {transform: scale(1.1)}
+    to {transform: scale(1)}
+}
+

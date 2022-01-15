@@ -7,12 +7,11 @@ import Units from "./constants/Units";
 import ReactTooltip from "react-tooltip";
 import {getFakeValueFromMemory, destructureRtnCell, evaluateExpressionValue} from './assemblyExecution';
 import {initialInstructionMemoryAddress, initialMemoryAddress, totalMemoryCells} from './constants/MemoryAddresses';
-import RegisterContainer from "./components/RegisterContainer";
+import RegisterContainer from "./components/Registers/RegisterContainer";
 import MemoryTable from "./components/MemoryTable";
 import translate from "./translation";
 import {splitWhitespace} from "./utils";
 import RegisterConnectionLines from "./components/RegisterConnectionLines/RegisterConnectionLines";
-
 
 function AssemblyEmulator() {
 
@@ -22,6 +21,8 @@ function AssemblyEmulator() {
     const [isAssembled, setIsAssembled] = useState<boolean>(false);
     const [assemblyRtns, setAssemblyRtns] = useState<Array<string>>([]);
     const [currentRtnIndex, setCurrentRtnIndex] = useState<number>(0);
+
+    const [showArrows, setShowArrows] = useState<boolean>(true);
 
     const resetRegisters = () => {
         setRegisters(Registers);
@@ -189,12 +190,15 @@ function AssemblyEmulator() {
                     <ReactTooltip id="reset-registers-memory">
                         <span>Resets all memory locations and registers.</span>
                     </ReactTooltip>
+                    <div className="option-item grow">
+                        <label>Show arrows: <input type="checkbox" id="show-arrows" name="show-arrows" checked={showArrows}
+                                                  onChange={e => setShowArrows(e.target.checked)}/></label>
+                    </div>
                 </div>
                 <h2 className="hardware-heading">Registers & Units</h2>
-                <div id="memory-text"><h2 className="hardware-heading">Memory</h2></div>
-                <RegisterContainer registers={registers}/>
+                <RegisterContainer registers={registers} currentRtn={getLastRtn()}/>
                 <br/>
-
+                <div id="memory-text"><h2 className="hardware-heading">Memory</h2></div>
                 {/* Instruction Memory*/}
                 {instrMemoryArr.length > 0 ? <MemoryTable
                     memoryArr={instrMemoryArr}
@@ -203,7 +207,7 @@ function AssemblyEmulator() {
 
                 <MemoryTable memoryArr={memoryArr} initialMemoryAddr={initialMemoryAddress}/>
             </div>
-            <RegisterConnectionLines currentRtn={getLastRtn()}/>
+            {showArrows && <RegisterConnectionLines currentRtn={getLastRtn()}/>}
         </div>
     );
 }

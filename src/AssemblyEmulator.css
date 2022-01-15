@@ -90,6 +90,7 @@
 
 .option-item{
   margin-left: 10px;
+  color: var(--main-compliment)
 }
 
 .registers-container {
@@ -142,8 +143,8 @@
   display: flex;
   flex-direction: row;
   border: thin solid var(--main-compliment);
-  min-width: 100%;
-  max-width: 100%;
+  min-width: 6vw;
+  max-width: 10vw;
 }
 
 .unit {

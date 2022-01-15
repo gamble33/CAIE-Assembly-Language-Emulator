@@ -27,7 +27,6 @@ const RegisterConnectionLines: React.FC<Props> = ({currentRtn}) => {
     }, [])
 
     useEffect(() => {
-        console.log(currentRtn);
         if(!currentRtn) return;
         const rtnParts = splitWhitespace(currentRtn);
         const cell1  = destructureRtnCell(rtnParts[2])[0];
