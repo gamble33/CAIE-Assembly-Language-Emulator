@@ -5,6 +5,10 @@
   --main-compliment-secondary: #D0DB97;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .App {
   display: flex;
   flex-direction: row;

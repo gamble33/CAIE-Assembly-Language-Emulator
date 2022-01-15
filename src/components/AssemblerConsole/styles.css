@@ -5,3 +5,8 @@
 .default {
     color: var(--main-compliment);
 }
+
+.log {
+    overflow-y: scroll;
+    max-height: 300px;
+}

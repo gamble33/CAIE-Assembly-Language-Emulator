@@ -35,6 +35,7 @@ function AssemblyEmulator() {
     const currentPlayEndCallback = useRef<() => void>();
 
     const [showArrows, setShowArrows] = useState<boolean>(true);
+    const [clearConsole, setClearConsole] = useState<boolean>(false);
 
     const resetRegisters = () => {
         setRegisters(Registers);
@@ -160,6 +161,8 @@ function AssemblyEmulator() {
         resetMemory();
         resetRtns();
         isAutoStepActive.current = false;
+        setClearConsole(true);
+        setTimeout(() => setClearConsole(false), 1);
     }
 
     const step = (rtns: Array<string>, rtnIndex: number, fakeRegisters: RegisterObject[], fakeMemory: number[]): [RegisterObject[], number[]] => {
@@ -248,7 +251,7 @@ function AssemblyEmulator() {
                     allowCodeExecution={currentRtnIndex < assemblyRtns.length}
                     onPlayToggle={handlePlay}
                 />
-                <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]}/>
+                <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]} currentRtn={getLastRtn()} clearConsole={clearConsole}/>
             </div>
             <div className="right-container container">
                 <div className="options">

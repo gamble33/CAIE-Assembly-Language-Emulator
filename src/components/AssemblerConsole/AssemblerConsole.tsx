@@ -1,12 +1,21 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./styles.css";
 
 interface Props {
     outputType: string;
     outputMessage: string;
+    currentRtn: string;
+    clearConsole: boolean;
 }
 
-const AssemblerConsole: React.FC<Props> = ({outputType, outputMessage}) => {
+const AssemblerConsole: React.FC<Props> = ({outputType, outputMessage, currentRtn, clearConsole}) => {
+
+    const [allRtns, setAllRtns] = useState<Array<string>>([]);
+
+    useEffect(() => setAllRtns(prevState => [currentRtn].concat(prevState)), [currentRtn]);
+    useEffect(() => {
+        if(clearConsole) setAllRtns([]);
+    }, [clearConsole]);
 
     const renderOutput = () => {
         switch (outputType) {
@@ -28,6 +37,9 @@ const AssemblerConsole: React.FC<Props> = ({outputType, outputMessage}) => {
     return (
         <div style={{color: "#777"}}>Result:{" "}
             {renderOutput()}
+            <div className="log">
+                {allRtns.map((value, index) => (<div key={index}>{value}</div>))}
+            </div>
         </div>
     );
 }
