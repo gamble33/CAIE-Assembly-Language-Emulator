@@ -83,6 +83,9 @@ function AssemblyEmulator() {
         return instrMemoryArr.find((curValue, index) => initialInstructionMemoryAddress + index === memoryAddress)!;
     }
 
+    const resetRtns = () => {
+        setCurrentRtnIndex(0);
+    }
 
     useEffect(() => {
 
@@ -116,7 +119,6 @@ function AssemblyEmulator() {
         );
         setRegisters(newRegisterArr);
         setMemoryArr(newMemoryArr);
-        setCurrentRtnIndex(prevState => prevState + 1);
     }
 
     const step = (rtns: Array<string>, rtnIndex: number, fakeRegisters: RegisterObject[], fakeMemory: number[]): [RegisterObject[], number[]] => {
@@ -128,10 +130,14 @@ function AssemblyEmulator() {
         if (Units.find(value => value.name === rtnParts[0])) {
             // just animation needed (transfer is between unit & register/unit thus no data is being transferred)
             // TODO: animation
+
+            setCurrentRtnIndex(prevState => prevState + 1);
             return [fakeRegisters, fakeMemory];
         }
         if (Units.find(value => value.name === rtnParts[2])) { // E.g., MAR <- CU
             // TODO: Animation
+
+            setCurrentRtnIndex(prevState => prevState + 1);
             return [fakeRegisters, fakeMemory];
         } else {
 
@@ -154,6 +160,7 @@ function AssemblyEmulator() {
 
         }
         fakeRegisters = getUpdatedRegisterFakeState(receivingCell, valueForRegister, fakeRegisters);
+        setCurrentRtnIndex(prevState => prevState + 1);
         return [fakeRegisters, fakeMemory];
     }
 
@@ -184,6 +191,7 @@ function AssemblyEmulator() {
                     onExecute={fastExecute}
                     onStep={handleStepClick}
                     isCodeAssembled={isAssembled}
+                    allowCodeExecution={currentRtnIndex < assemblyRtns.length}
                 />
                 <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]}/>
             </div>
@@ -192,6 +200,7 @@ function AssemblyEmulator() {
                     <button data-tip data-for="reset-registers-memory" className="button grow" onClick={() => {
                         resetRegisters();
                         resetMemory();
+                        resetRtns();
                     }}>Reset
                     </button>
                     <ReactTooltip id="reset-registers-memory">

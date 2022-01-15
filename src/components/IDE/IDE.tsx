@@ -13,9 +13,11 @@ interface Props {
     onStep(): void;
 
     isCodeAssembled: boolean;
+
+    allowCodeExecution: boolean;
 }
 
-const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled}) => {
+const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, allowCodeExecution}) => {
 
     const [editorState, setEditorState] = useState(
         () => EditorState.createEmpty(),
@@ -107,7 +109,7 @@ const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled})
                         }
                             </span>
                 </ReactTooltip>
-                {isCodeAssembled ?
+                {isCodeAssembled && allowCodeExecution ?
                     <>
                         <div className="option-item grow">
                             <label>Allow step: <input type="checkbox" id="allow-step" name="allow-step"
