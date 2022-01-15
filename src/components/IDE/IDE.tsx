@@ -4,6 +4,7 @@ import 'draft-js/dist/Draft.css';
 import Line from "./Line";
 import "./styles.css";
 import ReactTooltip from "react-tooltip";
+import set = Reflect.set;
 
 interface Props {
     onTranslate(code: string, twoPass: boolean): void;
@@ -12,18 +13,22 @@ interface Props {
 
     onStep(): void;
 
+    onPlayToggle(onEndCallback: () => void, speed: number, playing: boolean): void;
+
     isCodeAssembled: boolean;
 
     allowCodeExecution: boolean;
+
 }
 
-const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, allowCodeExecution}) => {
+const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, allowCodeExecution, onPlayToggle}) => {
 
     const [editorState, setEditorState] = useState(
         () => EditorState.createEmpty(),
     );
     const [allowStep, setAllowStep] = useState<boolean>(false);
     const [twoPassAssembler, setTwoPassAssembler] = useState<boolean>(false);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
     const mapKeyToEditorCommand = (e: any): string | null => {
         if (e.keyCode === 9 /* TAB */) {
@@ -52,7 +57,17 @@ const IDE: React.FC<Props> = ({onTranslate, onExecute, onStep, isCodeAssembled, 
 
     const renderExecuteButton = () => {
         if (allowStep) {
-            return <button className={"button grow"} onClick={() => onStep()}>Step</button>
+            return (
+                <>
+                    {!isPlaying && <button className={"button grow"} onClick={() => onStep()}>Step</button>}
+                    <button className={"button grow"} onClick={() => {
+                        onPlayToggle(() => {
+                            setIsPlaying(false);
+                        }, 1, !isPlaying);
+                        setIsPlaying(prevState => !prevState);
+                    }}>{isPlaying ? "Pause" : "Play"}</button>
+                </>
+            )
         } else {
             return <button className={"button grow"} onClick={() => onExecute()}>Execute</button>
         }

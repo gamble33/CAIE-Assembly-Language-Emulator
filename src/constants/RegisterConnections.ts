@@ -49,5 +49,15 @@ export const RegisterConnections: RegisterConnection[] = [
     reg1: "CU",
     reg2: "MAR",
     doubleSided: false,
-  }
+  },
+  {
+    reg1: "MAR",
+    reg2: "MEMORY",
+    doubleSided: false,
+  },
+  {
+    reg1: "MDR",
+    reg2: "MEMORY",
+    doubleSided: true,
+  },
 ];

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './AssemblyEmulator.css';
 import IDE from "./components/IDE/IDE";
 import RegisterObject from "./Types/RegisterType";
@@ -13,6 +13,7 @@ import translate from "./translation";
 import {splitWhitespace} from "./utils";
 import RegisterConnectionLines from "./components/RegisterConnectionLines/RegisterConnectionLines";
 import AssemblerConsole from "./components/AssemblerConsole/AssemblerConsole";
+import useInterval from "./useInterval";
 
 function AssemblyEmulator() {
 
@@ -23,6 +24,10 @@ function AssemblyEmulator() {
     const [assemblyRtns, setAssemblyRtns] = useState<Array<string>>([]);
     const [currentRtnIndex, setCurrentRtnIndex] = useState<number>(0);
     const [assemblerResult, setAssemblerResult] = useState<[string, string]>(["", "NOTASSEMBLED"]);
+
+    const isAutoStepActive = useRef<boolean>(false);
+    const playSpeed = useRef<number>(1);
+    const currentPlayEndCallback = useRef<() => void>();
 
     const [showArrows, setShowArrows] = useState<boolean>(true);
 
@@ -95,7 +100,8 @@ function AssemblyEmulator() {
         // Initialize Memory
         resetMemory();
 
-    }, [])
+    }, []);
+
 
     const onAssemble = (code: string, twoPass: boolean) => {
         const [rtns, instrCodeArr, translateError] = translate(code);
@@ -122,10 +128,33 @@ function AssemblyEmulator() {
         setMemoryArr(newMemoryArr);
     }
 
+    const innerTimerFunction = () => {
+        console.log('hello');
+    }
+
+    useInterval(() => {
+        if (currentRtnIndex >= assemblyRtns.length || !isAutoStepActive.current) {
+            currentPlayEndCallback.current!();
+            return;
+        }
+        handleStepClick();
+    }, 1000 / playSpeed.current);
+
+    const handlePlay = (onEndCallback: () => void, speed: number, isPlaying: boolean) => {
+        playSpeed.current = speed;
+        currentPlayEndCallback.current = onEndCallback;
+        if (isPlaying && !isAutoStepActive.current) {
+            isAutoStepActive.current = true;
+        } else if (isAutoStepActive.current) {
+            isAutoStepActive.current = false;
+        }
+    }
+
     const resetUnitsAndExecutor = () => {
         resetRegisters();
         resetMemory();
         resetRtns();
+        isAutoStepActive.current = false;
     }
 
     const step = (rtns: Array<string>, rtnIndex: number, fakeRegisters: RegisterObject[], fakeMemory: number[]): [RegisterObject[], number[]] => {
@@ -199,6 +228,7 @@ function AssemblyEmulator() {
                     onStep={handleStepClick}
                     isCodeAssembled={isAssembled}
                     allowCodeExecution={currentRtnIndex < assemblyRtns.length}
+                    onPlayToggle={handlePlay}
                 />
                 <AssemblerConsole outputMessage={assemblerResult[0]} outputType={assemblerResult[1]}/>
             </div>
@@ -221,6 +251,7 @@ function AssemblyEmulator() {
                 <RegisterContainer registers={registers} currentRtn={getLastRtn()}/>
                 <br/>
                 <div id="memory-text"><h2 className="hardware-heading">Memory</h2></div>
+                <div style={{position: "relative", left: "50%", top: 0, width: "1px"}} id="MEMORY"/>
                 {/* Instruction Memory*/}
                 {instrMemoryArr.length > 0 ? <MemoryTable
                     memoryArr={instrMemoryArr}

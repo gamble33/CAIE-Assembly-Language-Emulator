@@ -4,11 +4,12 @@ import {RegisterConnection} from "../../constants/RegisterConnections";
 import "./styles.css";
 
 interface Props {
-    connection: RegisterConnection
-    animated: boolean
+    connection: RegisterConnection;
+    animated: boolean;
+    color?: string;
 }
 
-const RegisterConnectionLine: React.FC<Props> = ({connection, animated}) => {
+const RegisterConnectionLine: React.FC<Props> = ({connection, animated, color}) => {
 
     return (
         <>
@@ -19,6 +20,7 @@ const RegisterConnectionLine: React.FC<Props> = ({connection, animated}) => {
                     headSize={4}
                     tailSize={4}
                     strokeWidth={2}
+                    color={color ? color : "cyan"}
                     showTail={connection.doubleSided}
                     animateDrawing={true}
                     // color={animated ? 'red' : 'blue'}
