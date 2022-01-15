@@ -1,5 +1,6 @@
 .animated {
     animation: animated-keyframes .2s ease-in-out;
+    overflow-x: hidden;
 }
 
 @keyframes animated-keyframes {

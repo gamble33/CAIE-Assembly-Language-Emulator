@@ -5,7 +5,6 @@ import {splitWhitespace} from "./utils";
 const COMMENT_CHAR = '#';
 const fetchExecuteCycle: Array<Array<string>> = [
     [
-        "PC <- CU",
         "MAR <- [PC]",
         "MDR <- [[MAR]]",
         "CIR <- [MDR]",

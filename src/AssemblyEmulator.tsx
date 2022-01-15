@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './AssemblyEmulator.css';
-import IDE from "./components/IDE";
+import IDE from "./components/IDE/IDE";
 import RegisterObject from "./Types/RegisterType";
 import Registers from "./constants/Registers";
 import Units from "./constants/Units";
@@ -143,7 +143,6 @@ function AssemblyEmulator() {
             for (let i = 0; i < bracketCounter; i++) {
                 innerValue = retrieveValueFromMemoryFunc(innerValue, fakeMemory);
             }
-            console.log(instrMemoryArr);
             valueForRegister = innerValue;
 
         }
