@@ -140,7 +140,7 @@ function AssemblyEmulator() {
 
     useInterval(() => {
         if (currentRtnIndex >= assemblyRtns.length || !isAutoStepActive.current) {
-            currentPlayEndCallback.current!();
+            if(currentPlayEndCallback.current) currentPlayEndCallback.current!();
             return;
         }
         handleStepClick();
