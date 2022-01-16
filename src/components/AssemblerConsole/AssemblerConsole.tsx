@@ -40,13 +40,14 @@ const AssemblerConsole: React.FC<Props> = ({outputType, outputMessage, currentRt
 
             <div style={{display: "flex", flexDirection: "row"}}>Result:{renderOutput()}</div>
 
-            {allRtns ? <button
-                style={{width: "30%"}}
-                className="button grow"
-                onClick={() => setConsoleActive(prevState => !prevState)}
-            >Toggle Console Log
-            </button>
-            : ""}
+            {allRtns.length > 0 ?
+                (<button
+                    style={{width: "30%"}}
+                    className="button grow"
+                    onClick={() => setConsoleActive(prevState => !prevState)}>Toggle Console Log
+                </button>)
+                : ""
+            }
             {consoleActive &&
             <div className="log">
                 {allRtns.map((value, index) => (<div key={index}>{value}</div>))}

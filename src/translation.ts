@@ -19,7 +19,7 @@ const fetchExecuteCycle: Array<Array<string>> = [
 const filterComments = (code: string): string => {
     let filteredCommentsString: string = "";
     code.split(/\r?\n/).forEach(line => {
-        if (line.substring(0, 1) !== COMMENT_CHAR) {
+        if (line.substring(0, 1) !== COMMENT_CHAR && line.length > 0) {
             filteredCommentsString += " " + line;
         }
     })
