@@ -28,6 +28,10 @@ const AssemblerConsole: React.FC<Props> = ({outputType, outputMessage, currentRt
                 return (
                     <span className="default">Not assembled</span>
                 )
+            case "ERROR":
+                return (
+                    <span className="error">{outputMessage}</span>
+                )
             default:
                 return (
                     <span>Unknown Result</span>

@@ -49,16 +49,6 @@ function AssemblyEmulator() {
         setMemoryArr(arr);
     }
 
-    const updateRegister = (registerName: string, newVal: number): void => {
-        registerName = registerName.toUpperCase();
-        setRegisters(prevState => prevState.map(curRegister => {
-            return {
-                ...curRegister,
-                value: curRegister.name === registerName ? newVal : curRegister.value,
-            };
-        }));
-    }
-
     const getUpdatedRegisterFakeState = (registerName: string, newVal: number, fakeRegisters: RegisterObject[]): RegisterObject[] => {
         registerName = registerName.toUpperCase();
         if (!fakeRegisters) fakeRegisters = registers;
@@ -68,26 +58,6 @@ function AssemblyEmulator() {
                 value: curRegister.name === registerName ? newVal : curRegister.value,
             };
         });
-    }
-
-    const updateMemoryLocation = (memoryAddress: number, newVal: number) => {
-        setMemoryArr(prevState => prevState.map((val, index) =>
-            initialMemoryAddress + index === memoryAddress ? newVal : val
-        ));
-    }
-
-    const getRegisterValue = (registerName: string): number => {
-        registerName = registerName.toUpperCase();
-        const registerObject: RegisterObject | undefined = registers.find(curRegister => curRegister.name === registerName);
-        if (registerObject) return registerObject.value;
-        else {
-            console.error("Register", registerName, "not found.")
-            return -1;
-        }
-    }
-
-    const getValueFromMemory = (memoryAddress: number): number => {
-        return memoryArr.find((curValue, index) => initialMemoryAddress + index === memoryAddress)!;
     }
 
     const getValueFromInstructionMemory = (memoryAddress: number): number => {
@@ -110,7 +80,7 @@ function AssemblyEmulator() {
 
 
     const onAssemble = (code: string, twoPass: boolean) => {
-        const [rtns, instrCodeArr, translateError] = translate(code);
+        const [rtns, instrCodeArr, translateError] = translate(code, twoPass);
         if (translateError) {
             setAssemblerResult([translateError, "ERROR"]);
             return;
@@ -140,7 +110,7 @@ function AssemblyEmulator() {
 
     useInterval(() => {
         if (currentRtnIndex >= assemblyRtns.length || !isAutoStepActive.current) {
-            if(currentPlayEndCallback.current) currentPlayEndCallback.current!();
+            if (currentPlayEndCallback.current) currentPlayEndCallback.current!();
             return;
         }
         handleStepClick();
@@ -192,6 +162,7 @@ function AssemblyEmulator() {
             const [givingCell, exprSuffix, bracketPairs] = destructureRtnCell(rtnParts[2]);
 
             let givingInnerValue = evaluateExpressionValue(givingCell, exprSuffix, fakeRegisters);
+            console.log(givingInnerValue);
 
             let bracketCounter = bracketPairs - 1;
             const retrieveValueFromMemoryFunc: any =

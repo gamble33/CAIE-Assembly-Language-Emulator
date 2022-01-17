@@ -37,6 +37,16 @@ const Instructions: InstructionObj[] = [
         usage: "STO <address>",
         description: "Stores contents of ACC into memory location specified",
         opcodeNumber: 19
+    },
+    {
+        opcode: "INC",
+        operand: operandType.REGISTER,
+        rtns: [
+            "OPERAND <- [OPERAND]+1"
+        ],
+        usage: "INC ACC|IX",
+        description: "Increments",
+        opcodeNumber: 21,
     }
 ];
 
