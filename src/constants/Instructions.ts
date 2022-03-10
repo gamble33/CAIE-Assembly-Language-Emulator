@@ -47,7 +47,7 @@ const Instructions: InstructionObj[] = [
         usage: "INC ACC|IX",
         description: "Increments",
         opcodeNumber: 21,
-    }
+    },
 ];
 
 export default Instructions;
